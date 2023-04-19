@@ -1,1 +1,5 @@
 node_modules
+.env
+# Ignore Idea files
+.idea/*
+/dist/

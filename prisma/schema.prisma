@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid // Primary Key
+  name    String   @unique
+  players Player[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Optional value
+}
+
+model Player {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid // Primary Key
+  name     String
+  surname  String
+  position String
+  shirtNum Int
+  team     Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId   String @db.Uuid // Foreign Key
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Optional value
+}
