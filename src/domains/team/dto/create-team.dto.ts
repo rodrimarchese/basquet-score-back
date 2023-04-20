@@ -1,7 +1,12 @@
-export class CreateTeamDto {
-    name: string;
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
-    constructor(name: string) {
-        this.name = name;
-    }
+export class CreateTeamDto {
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(240)
+    name!: string;
+
+    @IsOptional()
+    @MaxLength(4)
+    images?: string[];
 }

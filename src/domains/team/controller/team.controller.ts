@@ -4,6 +4,8 @@ import {db} from '@utils'
 import {TeamDto, CreateTeamDto} from '../dto';
 import {TeamRepository} from '../repository'
 import {ITeamService, TeamService} from '../service';
+import "express-async-errors";
+import {BodyValidation} from "@utils/validation";
 
 export const teamRouter = Router();
 const service: ITeamService = new TeamService(new TeamRepository(db));
@@ -16,7 +18,7 @@ teamRouter.get('/', async (req: Request, res: Response) => {
     return res.status(HttpStatus.OK).json(teams);
 });
 
-teamRouter.post('/', async (req: Request, res: Response) => {
+teamRouter.post('/', BodyValidation(CreateTeamDto), async (req: Request, res: Response) => {
     const team = await service.create(req.body);
 
     return res.status(HttpStatus.CREATED).json(team);
