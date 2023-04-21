@@ -1,6 +1,5 @@
 import express from "express";
-import { json } from "body-parser";
-import { router } from '@router';
+import { router } from './router';
 import {Constants, Logger} from '@utils';
 
 const app = express();
@@ -15,6 +14,6 @@ app.listen(Constants.PORT, () => {
 });
 
 
-app.use('/api', router);
+app.use('/', router);
 
 export { app };

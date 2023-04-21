@@ -11,7 +11,6 @@ export function BodyValidation<T>(target: ClassType<T>) {
             whitelist: true,
             forbidNonWhitelisted: true,
         });
-        console.log(req.body, errors);
         if (errors.length > 0)
             throw new ValidationException(errors.map(error => ({...error, target: undefined, value: undefined})));
 
