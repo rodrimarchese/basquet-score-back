@@ -1,4 +1,4 @@
 
-	    export * from './create-Player.dto';
-        export * from './Player.dto';  
+	    export * from './create-player.dto';
+        export * from './player.dto';  
     

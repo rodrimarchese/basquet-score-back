@@ -1,1 +1,1 @@
-export * from './Player.controller';
+export * from "./player.controller";

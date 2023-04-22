@@ -1,3 +1,3 @@
-export * from './Player.service.impl';
-	export * from './Player.service.interface';
+export * from './player.service.impl';
+	export * from './player.service.interface';
 	

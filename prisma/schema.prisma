@@ -26,8 +26,8 @@ model Player {
   surname  String
   position String
   shirtNum Int
-  team     Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  teamId   String @db.Uuid // Foreign Key
+  team     Team?   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId   String? @db.Uuid // Foreign Key
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

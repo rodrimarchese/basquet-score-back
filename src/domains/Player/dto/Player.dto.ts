@@ -1,23 +1,21 @@
-import {TeamDto} from "@domains/team/dto";
+import { TeamDto } from "@domains/team/dto";
 
 export class PlayerDto {
-    id: string;
-    name: string;
-    surname: string;
-    position :string;
-    shirtNum: number;
+  id: string;
+  name: string;
+  surname: string;
+  position: string;
+  shirtNum: number;
+  team?: TeamDto;
+  createdAt: Date;
 
-    createdAt: Date;
-
-
-        constructor(player: PlayerDto) {
-            this.id = player.id;
-            this.name = player.name;
-            this.surname = player.surname;
-            this.position = player.position;
-            this.shirtNum = player.shirtNum;
-
-
-            this.createdAt = player.createdAt;
-        }
+  constructor(player: PlayerDto) {
+    this.id = player.id;
+    this.name = player.name;
+    this.surname = player.surname;
+    this.position = player.position;
+    this.shirtNum = player.shirtNum;
+    this.team = player.team;
+    this.createdAt = player.createdAt;
+  }
 }

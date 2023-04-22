@@ -1,3 +1,2 @@
-export * from './Player.repository.impl';
-	export * from './Player.repository.interface';
-	
+export * from "./player.repository.impl";
+export * from "./player.repository.interface";
