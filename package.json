@@ -11,7 +11,8 @@
     "db:migrate": "prisma migrate deploy",
     "db:make-migrations": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "migrate:postgres": "dotenv -e .env.test -- npx prisma migrate deploy"
+    "migrate:postgres": "dotenv -e .env.test -- npx prisma migrate deploy",
+    "test": "jest --forceExit --detectOpenHandles"
   },
   "dependencies": {
     "@prisma/client": "4.13.0",
