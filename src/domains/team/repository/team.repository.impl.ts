@@ -5,8 +5,7 @@ import {CursorPagination} from '@types';
 import {ConflictException} from "@utils";
 
 export class TeamRepository implements ITeamRepository {
-    constructor(private readonly db: PrismaClient) {
-    }
+    constructor(private readonly db: PrismaClient) {}
 
     async create(data: CreateTeamDto): Promise<TeamDto> {
         // Check if team already exists
