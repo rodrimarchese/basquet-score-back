@@ -20,6 +20,7 @@
     "noImplicitAny": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
+    "types": ["cors"],
     "paths": {
       "@*": [
         "./*"
@@ -36,3 +37,4 @@
     "node_modules"
   ]
 }
+

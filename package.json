@@ -38,7 +38,9 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.5.0",
+    "@types/cors": "^2.8.13",
     "@types/signale": "^1.4.4",
+    "cors": "^2.8.5",
     "prisma": "^4.13.0",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1"

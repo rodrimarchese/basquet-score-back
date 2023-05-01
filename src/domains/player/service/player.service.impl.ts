@@ -4,12 +4,12 @@ import { IPlayerRepository } from "../repository";
 import { CursorPagination } from "@types";
 
 export class PlayerService implements IPlayerService {
-  constructor(private readonly PlayerRepository: IPlayerRepository) {}
+  constructor(private readonly playerRepository: IPlayerRepository) {}
 
   async create(createPlayerDto: CreatePlayerDto): Promise<PlayerDto> {
-    return await this.PlayerRepository.create(createPlayerDto);
+    return await this.playerRepository.create(createPlayerDto);
   }
   getLatestPlayer(options: CursorPagination): Promise<PlayerDto[]> {
-    return this.PlayerRepository.getAllByDatePaginated(options);
+    return this.playerRepository.getAllByDatePaginated(options);
   }
 }
