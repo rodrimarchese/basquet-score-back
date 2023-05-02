@@ -12,6 +12,7 @@ RUN yarn install --frozen-lockfile
 FROM node:18-slim AS builder
 
 WORKDIR /app
+VOLUME /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
