@@ -13,7 +13,7 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "moduleNameMapper": {
-    "@utils": "<rootDir>/src/utils",
+    "@utils": "<rootDir>/src/utils"
   },
   "collectCoverageFrom": [
     "**/*.(t|j)s"
