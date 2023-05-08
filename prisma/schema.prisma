@@ -18,10 +18,12 @@ model Team {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime? // Optional value
+  homeGames Game[]    @relation(name: "homeGames")
+  awayGames Game[]    @relation(name: "awayGames")
 }
 
 model Player {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid // Primary Key
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid // Primary Key
   name     String
   surname  String
   position String
@@ -29,7 +31,47 @@ model Player {
   team     Team?   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId   String? @db.Uuid // Foreign Key
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime? // Optional value
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deletedAt      DateTime? // Optional value
+  PlayerGameData PlayerGameData[]
+}
+
+model Game {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid // Primary Key
+
+  homeTeam   Team   @relation(name: "homeGames", fields: [homeTeamId], references: [id], onDelete: Cascade) // One to many
+  homeTeamId String @db.Uuid // Foreign Key
+
+  awayTeam   Team   @relation(name: "awayGames", fields: [awayTeamId], references: [id], onDelete: Cascade) // One to many
+  awayTeamId String @db.Uuid // Foreign Key
+
+  homeScore      Int              @default(0)
+  awayScore      Int              @default(0)
+  date           DateTime
+  endedAt        DateTime?
+  PlayerGameData PlayerGameData[]
+}
+
+enum PlayerGameDataType {
+  SCORE_GOAL
+  ASSIST
+  FOUL
+  SUBBED_IN
+  SUBBED_OUT
+  OWN_GOAL
+  STARTED_GAME
+}
+
+model PlayerGameData {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid // Primary Key
+
+  gameId String @db.Uuid // Foreign Key
+  game   Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  playerId String @db.Uuid // Foreign Key
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  data_type  PlayerGameDataType
+  data_value String?
 }
