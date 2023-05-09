@@ -1,4 +1,5 @@
 import {GameDto, CreateGameDto} from '../dto';
+import {PlayerDto} from "@domains/player/dto";
 
 export abstract class IGameService {
     abstract create(createGameDto: CreateGameDto): Promise<GameDto>;
@@ -19,4 +20,5 @@ export abstract class IGameService {
 
     abstract addPlayerChange(game_id: string, player_id: string, player_in: string, player_out: string): Promise<void>
 
+    abstract getGameLineup(game_id: string,team_id: string): Promise<PlayerDto[]>
 }

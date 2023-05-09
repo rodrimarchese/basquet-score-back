@@ -78,3 +78,13 @@ gameRouter.get('/:game_id', async (req: Request, res: Response) => {
 })
 
 
+gameRouter.get('/lineup/:game_id/:team_id', async (req: Request, res: Response) => {
+    const {userId} = res.locals.context;
+    const {game_id,team_id} = req.params;
+
+    const game = await service.getGameLineup(game_id,team_id);
+
+    if (!game) return res.status(HttpStatus.NOT_FOUND).json();
+
+    return res.status(HttpStatus.OK).json(game);
+})

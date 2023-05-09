@@ -15,11 +15,12 @@ model Team {
   name    String   @unique
   players Player[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime? // Optional value
-  homeGames Game[]    @relation(name: "homeGames")
-  awayGames Game[]    @relation(name: "awayGames")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deletedAt      DateTime? // Optional value
+  homeGames      Game[]           @relation(name: "homeGames")
+  awayGames      Game[]           @relation(name: "awayGames")
+  PlayerGameData PlayerGameData[]
 }
 
 model Player {
@@ -60,7 +61,6 @@ enum PlayerGameDataType {
   SUBBED_IN
   SUBBED_OUT
   OWN_GOAL
-  STARTED_GAME
 }
 
 model PlayerGameData {
@@ -68,6 +68,9 @@ model PlayerGameData {
 
   gameId String @db.Uuid // Foreign Key
   game   Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  teamId String @db.Uuid // Foreign Key
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   playerId String @db.Uuid // Foreign Key
   player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)

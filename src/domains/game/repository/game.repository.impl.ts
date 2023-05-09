@@ -3,6 +3,7 @@ import {CreateGameDto, GameDto} from '../dto';
 import {PlayerGameDataType, PrismaClient} from '@prisma/client';
 import {CursorPagination} from '@types';
 import {NotFoundException} from "@utils";
+import {PlayerDto} from "@domains/player/dto";
 
 export class GameRepository implements IGameRepository {
     constructor(private readonly db: PrismaClient) {
@@ -58,6 +59,9 @@ export class GameRepository implements IGameRepository {
         if (!player) {
             throw new NotFoundException('Player not found');
         }
+        if (!player.teamId){
+            throw new NotFoundException('Player team not found');
+        }
         const game = await this.db.game.findUnique({
             where: {
                 id: gameId,
@@ -71,10 +75,37 @@ export class GameRepository implements IGameRepository {
         }
         await this.db.playerGameData.create({
             data: {
+                teamId: player.teamId,
                 data_type,
                 data_value,
                 gameId,
                 playerId
+            }
+        })
+    }
+
+    async getGameLineup(game_id: string,team_id: string): Promise<PlayerDto[]> {
+        const subbedOutPlayers = await this.db.playerGameData.findMany({
+            where: {
+                gameId: game_id,
+                teamId: team_id,
+                data_type: PlayerGameDataType.SUBBED_OUT
+            }
+        })
+        const subbedInPlayers = await this.db.playerGameData.findMany({
+            where: {
+                gameId: game_id,
+                teamId: team_id,
+                data_type: PlayerGameDataType.SUBBED_IN
+            }
+        })
+        const subbedOutPlayerIds = subbedOutPlayers.map(player => player.playerId)
+        const formation = subbedInPlayers.filter(player => !subbedOutPlayerIds.includes(player.playerId))
+        return this.db.player.findMany({
+            where: {
+                id: {
+                    in: formation.map(player => player.playerId)
+                }
             }
         })
     }
