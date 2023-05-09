@@ -30,5 +30,12 @@ export const makePlayerRouter = (service: IPlayerService): Router => {
       return res.status(HttpStatus.CREATED).json(player);
     }
   );
+
+  playerRouter.get("/:id/game_stats/:game_id", async (req: Request, res: Response) => {
+    const { id, game_id } = req.params;
+    const player = await service.getPlayerGameStats(id, game_id);
+
+    return res.status(HttpStatus.OK).json(player);
+  })
   return playerRouter;
 };
