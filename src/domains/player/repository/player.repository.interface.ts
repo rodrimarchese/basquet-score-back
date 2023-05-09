@@ -1,9 +1,12 @@
+import {PlayerDto, CreatePlayerDto} from '../dto';
+import {CursorPagination} from '@types';
+import {PlayerGameStatsDto} from "@domains/player/dto/player-game-stats.dto";
 
-	import { PlayerDto, CreatePlayerDto } from '../dto';
-    import { CursorPagination } from '@types';
-	
-	export abstract class IPlayerRepository {
-		abstract create(createPlayerDto: CreatePlayerDto): Promise<PlayerDto>;
-		abstract getAllByDatePaginated(options: CursorPagination): Promise<PlayerDto[]>;
-	}
-	
+export abstract class IPlayerRepository {
+    abstract create(createPlayerDto: CreatePlayerDto): Promise<PlayerDto>;
+
+    abstract getAllByDatePaginated(options: CursorPagination): Promise<PlayerDto[]>;
+
+    abstract getPlayerGameStats(id: string, game_id: string): Promise<PlayerGameStatsDto>;
+}
+
