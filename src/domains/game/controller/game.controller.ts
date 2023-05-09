@@ -10,17 +10,17 @@ export const gameRouter = Router();
 const service: IGameService = new GameService(new GameRepository(db));
 
 gameRouter.get('/', async (req: Request, res: Response) => {
-    const {userId} = res.locals.context;
+
     const {limit, before, after} = req.query as Record<string, string>;
 
-    const games = await service.getLatestGame(userId, {limit: Number(limit), before, after});
+    const games = await service.getLatestGame({limit: Number(limit), before, after});
 
     return res.status(HttpStatus.OK).json(games);
 });
 
 
 gameRouter.post('/',BodyValidation(CreateGameDto), async (req: Request, res: Response) => {
-    const {userId} = res.locals.context;
+
     const gameData = req.body as CreateGameDto;
 
     const game = await service.create(gameData);
@@ -29,7 +29,7 @@ gameRouter.post('/',BodyValidation(CreateGameDto), async (req: Request, res: Res
 })
 
 gameRouter.post('/end_game/:game_id', async (req: Request, res: Response) => {
-    const {userId} = res.locals.context;
+
     const {game_id} = req.params;
 
     const game = await service.endGame(game_id);
@@ -38,7 +38,7 @@ gameRouter.post('/end_game/:game_id', async (req: Request, res: Response) => {
 })
 
 gameRouter.post('/player_score', async (req: Request, res: Response) => {
-    const {userId} = res.locals.context;
+
     const {game_id, player_id, score} = req.body;
 
     await service.addPlayerScore(game_id, player_id, score);
@@ -47,7 +47,7 @@ gameRouter.post('/player_score', async (req: Request, res: Response) => {
 })
 
 gameRouter.post('/player_foul', async (req: Request, res: Response) => {
-    const {userId} = res.locals.context;
+
     const {game_id, player_id, foul} = req.body;
 
     await service.addPlayerFoul(game_id, player_id, foul);
@@ -56,7 +56,7 @@ gameRouter.post('/player_foul', async (req: Request, res: Response) => {
 })
 
 gameRouter.post('/player_in', async (req: Request, res: Response) => {
-    const {userId} = res.locals.context;
+
     const {game_id, player_id} = req.body;
 
     await service.addPlayerInGame(game_id, player_id);
@@ -65,7 +65,7 @@ gameRouter.post('/player_in', async (req: Request, res: Response) => {
 })
 
 gameRouter.post('/player_change', async (req: Request, res: Response) => {
-    const {userId} = res.locals.context;
+
     const {game_id, player_id, player_in,player_out} = req.body;
 
     await service.addPlayerChange(game_id, player_in,player_out);
@@ -76,7 +76,7 @@ gameRouter.post('/player_change', async (req: Request, res: Response) => {
 
 
 gameRouter.get('/:game_id', async (req: Request, res: Response) => {
-    const {userId} = res.locals.context;
+
     const {game_id} = req.params;
 
     const game = await service.getGame(game_id);
@@ -88,7 +88,7 @@ gameRouter.get('/:game_id', async (req: Request, res: Response) => {
 
 
 gameRouter.get('/lineup/:game_id/:team_id', async (req: Request, res: Response) => {
-    const {userId} = res.locals.context;
+
     const {game_id,team_id} = req.params;
 
     const game = await service.getGameLineup(game_id,team_id);

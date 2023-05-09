@@ -13,7 +13,7 @@ export class GameService implements IGameService {
         return await this.gameRepository.create(createGameDto);
     }
 
-    getLatestGame(userId: string, options: CursorPagination): Promise<GameDto[]> {
+    getLatestGame(options: CursorPagination): Promise<GameDto[]> {
         return this.gameRepository.getAllByDatePaginated(options);
     }
 

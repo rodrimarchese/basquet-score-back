@@ -4,7 +4,7 @@ import {PlayerDto} from "@domains/player/dto";
 export abstract class IGameService {
     abstract create(createGameDto: CreateGameDto): Promise<GameDto>;
 
-    abstract getLatestGame(userId: string, options: {
+    abstract getLatestGame(options: {
         limit?: number;
         before?: string;
         after?: string
