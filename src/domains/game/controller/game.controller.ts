@@ -55,11 +55,20 @@ gameRouter.post('/player_foul', async (req: Request, res: Response) => {
     return res.status(HttpStatus.OK).json();
 })
 
+gameRouter.post('/player_in', async (req: Request, res: Response) => {
+    const {userId} = res.locals.context;
+    const {game_id, player_id} = req.body;
+
+    await service.addPlayerInGame(game_id, player_id);
+
+    return res.status(HttpStatus.OK).json();
+})
+
 gameRouter.post('/player_change', async (req: Request, res: Response) => {
     const {userId} = res.locals.context;
     const {game_id, player_id, player_in,player_out} = req.body;
 
-    await service.addPlayerChange(game_id, player_id, player_in,player_out);
+    await service.addPlayerChange(game_id, player_in,player_out);
 
     return res.status(HttpStatus.OK).json();
 })

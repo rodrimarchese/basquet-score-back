@@ -29,9 +29,13 @@ export class GameService implements IGameService {
         return this.gameRepository.addPlayerGameData(game_id, player_id,PlayerGameDataType.FOUL, foul);
     }
 
-    async addPlayerChange(game_id: string, player_id: string, player_in: string,player_out: string): Promise<void> {
-        await this.gameRepository.addPlayerGameData(game_id, player_id,PlayerGameDataType.SUBBED_IN);
-        await this.gameRepository.addPlayerGameData(game_id, player_id,PlayerGameDataType.SUBBED_OUT);
+    async addPlayerChange(game_id: string, player_in: string,player_out: string): Promise<void> {
+        await this.gameRepository.addPlayerGameData(game_id, player_in,PlayerGameDataType.SUBBED_IN);
+        await this.gameRepository.addPlayerGameData(game_id, player_out,PlayerGameDataType.SUBBED_OUT);
+    }
+
+    async addPlayerInGame(game_id: string, player_in: string): Promise<void> {
+        await this.gameRepository.addPlayerGameData(game_id, player_in,PlayerGameDataType.SUBBED_IN);
     }
 
     getGame(game_id: string): Promise<GameDto | undefined> {
