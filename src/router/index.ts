@@ -7,6 +7,7 @@ import { db } from "@utils";
 import { makePlayerRouter } from "@domains/player/controller";
 import { PlayerRepository } from "@domains/player/repository";
 import { IPlayerService, PlayerService } from "@domains/player/service";
+import {gameRouter} from "@domains/game/controller";
 
 export const router = Router();
 
@@ -19,3 +20,4 @@ const playerService: IPlayerService = new PlayerService(
 );
 
 router.use("/player", makePlayerRouter(playerService));
+router.use("/game",gameRouter)

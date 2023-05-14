@@ -1,4 +1,4 @@
-import {IsArray, IsDate, IsNotEmpty, IsString, MaxLength} from "class-validator";
+import {IsArray, IsDate, IsDateString, IsNotEmpty, IsString, MaxLength} from "class-validator";
 
 export class CreateGameDto {
     @IsString()
@@ -11,7 +11,7 @@ export class CreateGameDto {
     @MaxLength(240)
     homeTeamId!: string;
 
-    @IsDate()
+    @IsDateString({ strict: true } as any) // Example:  "2023-06-01T18:30:00.000Z"
     @IsNotEmpty()
     date!: Date;
 }

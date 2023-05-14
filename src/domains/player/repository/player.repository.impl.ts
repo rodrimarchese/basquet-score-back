@@ -3,6 +3,7 @@ import {CreatePlayerDto, PlayerDto} from "../dto";
 import {PlayerGameDataType, PrismaClient} from "@prisma/client";
 import {CursorPagination} from "@types";
 import {PlayerGameStatsDto} from "@domains/player/dto/player-game-stats.dto";
+import {paginatedResponse} from "@utils/cursor_pagination";
 
 export class PlayerRepository implements IPlayerRepository {
     constructor(private readonly db: PrismaClient) {
@@ -17,33 +18,9 @@ export class PlayerRepository implements IPlayerRepository {
     }
 
     async getAllByDatePaginated(options: CursorPagination): Promise<PlayerDto[]> {
-        const players = await this.db.player.findMany(
-            options.after || options.before
-                ? {
-                    cursor: {
-                        id: options.after
-                            ? options.after
-                            : options.before
-                                ? options.before
-                                : undefined,
-                    },
-                    skip: options.after || options.before ? 1 : undefined,
-                    take: options.limit
-                        ? options.before
-                            ? -options.limit
-                            : options.limit
-                        : undefined,
-                    orderBy: [
-                        {
-                            createdAt: "desc",
-                        },
-                        {
-                            id: "asc",
-                        },
-                    ],
-                }
-                : undefined
-        );
+        const players = await this.db.player.findMany({
+            ...paginatedResponse(options)
+        });
         return players.map((player) => new PlayerDto(player));
     }
 

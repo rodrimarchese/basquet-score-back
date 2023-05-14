@@ -12,7 +12,7 @@ export class TeamService implements ITeamService {
         return await this.teamRepository.create(createTeamDto);
     }
 
-    getLatestTeam( options: CursorPagination): Promise<TeamDto[]> {
+    getLatestTeam( options?: CursorPagination): Promise<TeamDto[]> {
         return this.teamRepository.getAllByDatePaginated(options);
     }
 

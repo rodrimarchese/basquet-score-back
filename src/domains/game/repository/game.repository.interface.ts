@@ -15,5 +15,6 @@ export abstract class IGameRepository {
     abstract addPlayerGameData(game_id: string, player_id: string, data_type: PlayerGameDataType, data_value?: string): Promise<void>
 
     abstract getGameLineup(game_id: string,team_id: string): Promise<PlayerDto[]>
+    abstract addPoints(game_id: string, team_id: string, points: string): Promise<GameDto>
 }
 

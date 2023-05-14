@@ -21,7 +21,8 @@ export class GameService implements IGameService {
         return this.gameRepository.endGame(gameId);
     }
 
-    addPlayerScore(game_id: string, player_id: string, score: string): Promise<void> {
+    async addPlayerScore(game_id: string, player_id: string, score: string): Promise<void> {
+        await this.gameRepository.addPoints(game_id, player_id, score);
         return this.gameRepository.addPlayerGameData(game_id, player_id,PlayerGameDataType.SCORE_GOAL, score);
     }
 

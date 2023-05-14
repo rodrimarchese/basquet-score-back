@@ -4,6 +4,7 @@ import {PrismaClient} from '@prisma/client';
 import {CursorPagination} from '@types';
 import {ConflictException} from "@utils";
 import {PlayerDto} from "@domains/player/dto";
+import {paginatedResponse} from "@utils/cursor_pagination";
 
 export class TeamRepository implements ITeamRepository {
     constructor(private readonly db: PrismaClient) {
@@ -25,21 +26,9 @@ export class TeamRepository implements ITeamRepository {
     }
 
     async getAllByDatePaginated(options: CursorPagination): Promise<TeamDto[]> {
-        const teams = await this.db.team.findMany(options.after || options.before ? {
-            cursor: {
-                id: options.after ? options.after : options.before ? options.before : undefined,
-            },
-            skip: options.after || options.before ? 1 : undefined,
-            take: options.limit ? (options.before ? -options.limit : options.limit) : undefined,
-            orderBy: [
-                {
-                    createdAt: 'desc',
-                },
-                {
-                    id: 'asc',
-                },
-            ],
-        } : undefined);
+        const teams = await this.db.team.findMany({
+            ...paginatedResponse(options)
+        });
         return teams.map(team => new TeamDto(team));
     }
 

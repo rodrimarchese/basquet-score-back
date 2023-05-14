@@ -4,6 +4,7 @@ import {PlayerGameDataType, PrismaClient} from '@prisma/client';
 import {CursorPagination} from '@types';
 import {NotFoundException} from "@utils";
 import {PlayerDto} from "@domains/player/dto";
+import {paginatedResponse} from "@utils/cursor_pagination";
 
 export class GameRepository implements IGameRepository {
     constructor(private readonly db: PrismaClient) {
@@ -15,18 +16,9 @@ export class GameRepository implements IGameRepository {
         }).then(game => new GameDto(game));
     }
 
-    async getAllByDatePaginated(options: CursorPagination): Promise<GameDto[]> {
+    async getAllByDatePaginated(options?: CursorPagination): Promise<GameDto[]> {
         const games = await this.db.game.findMany({
-            cursor: {
-                id: options.after ? options.after : options.before ? options.before : undefined,
-            },
-            skip: options.after || options.before ? 1 : undefined,
-            take: options.limit ? (options.before ? -options.limit : options.limit) : undefined,
-            orderBy: [
-                {
-                    id: 'asc',
-                },
-            ],
+            ...paginatedResponse(options)
         });
         return games.map(game => new GameDto(game));
     }
@@ -110,4 +102,55 @@ export class GameRepository implements IGameRepository {
         })
     }
 
+    async addPoints(game_id: string, player_id: string, points: string): Promise<GameDto> {
+        const player = await this.db.player.findUnique({
+            where: {
+                id: player_id,
+            }
+        })
+        if (!player) {
+            throw new NotFoundException('Player not found');
+        }
+        if (!player.teamId){
+            throw new NotFoundException('Player team not found');
+        }
+        const game = await this.db.game.findUnique({
+            where: {
+                id: game_id,
+            }
+        })
+        if (!game) {
+            throw new NotFoundException('Game not found');
+        }
+        if (game.endedAt !== null) {
+            throw new Error('Game already ended');
+        }
+        if (game.awayTeamId === player.teamId){
+            return this.db.game.update({
+                where: {
+                    id: game_id,
+                },
+                data: {
+                    awayScore: {
+                        increment: parseInt(points)
+                    }
+                }
+            })
+        } else if (game.homeTeamId === player.teamId){
+            return this.db.game.update({
+                where: {
+                    id: game_id,
+                },
+                data: {
+                    homeScore: {
+                        increment: parseInt(points)
+                    }
+                }
+            })
+        } else {
+            throw new Error('Player not in game');
+        }
+    }
+
 }
+

@@ -52,6 +52,10 @@ model Game {
   date           DateTime
   endedAt        DateTime?
   PlayerGameData PlayerGameData[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Optional value
 }
 
 enum PlayerGameDataType {
@@ -77,4 +81,8 @@ model PlayerGameData {
 
   data_type  PlayerGameDataType
   data_value String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Optional value
 }
