@@ -5,6 +5,7 @@ import { BodyValidation } from "@utils";
 import { CreatePlayerDto } from "../dto";
 import { IPlayerService } from "../service";
 import app from "express";
+import {getPlayers, playerResponse} from "@externalServices/external-api/externalApi";
 
 export const makePlayerRouter = (service: IPlayerService): Router => {
   const playerRouter = app.Router();
@@ -37,5 +38,13 @@ export const makePlayerRouter = (service: IPlayerService): Router => {
 
     return res.status(HttpStatus.OK).json(player);
   })
+
+  playerRouter.get("/player_names", async (req: Request, res: Response) => {
+    const contains = req.query.contains || "";
+    const page = req.query.page || 1;
+    const playerResponse : playerResponse = await getPlayers(contains.toString(), parseInt(page.toString()))
+    return res.status(HttpStatus.OK).json(playerResponse);
+  })
+
   return playerRouter;
 };

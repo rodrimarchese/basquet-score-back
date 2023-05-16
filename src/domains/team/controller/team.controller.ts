@@ -6,6 +6,7 @@ import {TeamRepository} from '../repository'
 import {ITeamService, TeamService} from '../service';
 import "express-async-errors";
 import app from "express";
+import {getTeams2, teamResponse} from "@externalServices/external-api/externalApi";
 
 export const makeTeamRouter = (service: ITeamService): Router => {
     const teamRouter = app.Router()
@@ -31,5 +32,13 @@ export const makeTeamRouter = (service: ITeamService): Router => {
 
         return res.status(HttpStatus.OK).json(players);
     });
+
+    teamRouter.get('/team_names', async (req: Request, res: Response) => {
+        const contains = req.query.contains || "";
+        const page = req.query.page || 1;
+        const teamResponse : teamResponse = await getTeams2(contains.toString(), parseInt(page.toString()))
+        return res.status(HttpStatus.OK).json(teamResponse);
+    });
+
     return teamRouter
 }
