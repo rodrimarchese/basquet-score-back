@@ -1,8 +1,6 @@
 import {externalApiUrlPlayers} from "../urls";
-import request from 'request';
 import axios from "axios";
 import redis from 'redis';
-const client = redis.createClient();
 
 
 export type playerResponse = {
@@ -25,20 +23,17 @@ export const getPlayers = (contains: string, page: number) : Promise<playerRespo
     }
     console.log("PLAYER URL" + playerUrl)
     return new Promise(function (resolve) {
-        request(playerUrl, (error: string, body: any) => {
-            if(!error){
-                const data : Promise<playerResponse> = body.data
-                return resolve(data)
-            }
-            if(error){
-                console.error(error);
-                return Promise.resolve({
-                    totalPlayers: 0,
-                    totalPages: 0,
-                    currentPage: page,
-                    players: []
-                });
-            }
+        axios.get(playerUrl).then(r => {
+            console.log(r)
+            resolve(r.data)
+        }).catch(e => {
+            console.error(e)
+            resolve({
+                totalPlayers: 200,
+                totalPages: 0,
+                currentPage: page,
+                players: []
+            })
         })
     })
 }
