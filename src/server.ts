@@ -20,7 +20,7 @@ app.use(
 )
 
 
-app.listen(Constants.PORT, () => {
+export const server = app.listen(Constants.PORT, () => {
     Logger.info(`Server listening on port ${Constants.PORT}`);
 });
 

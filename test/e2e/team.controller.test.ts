@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {app} from "../../src/server";
+import {app, server} from "../../src/server";
 // @ts-ignore
 import supertest from "supertest";
 import {configureMockPrisma} from "./e2e.config";
@@ -17,6 +17,14 @@ describe("Team Controller", () => {
     afterEach(async () => {
         await deleteDatabase(prisma);
     })
+
+
+    afterAll(async () => {
+        await deleteDatabase(prisma);
+        await server.close();
+        await prisma.$disconnect();
+    })
+
 
     describe("GET /teams", () => {
         it("should return an empty list", async () => {

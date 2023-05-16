@@ -1,7 +1,8 @@
 import {PrismaClient} from "@prisma/client";
-import {app} from "../../src/server";
+import {app, server} from "../../src/server";
 // @ts-ignore
 import supertest from "supertest";
+import {configureMockPrisma} from "./e2e.config";
 
 const mockplayer1 = {
     name: "name",
@@ -14,16 +15,18 @@ describe("Player Controller", () => {
     let prisma: PrismaClient;
 
     beforeAll(async () => {
-        process.env.DATABASE_URL = require("dotenv").config({
-            path: "./.env.test",
-        }).parsed.DATABASE_URL;
-
-        prisma = new PrismaClient();
+        prisma = configureMockPrisma();
 
         await prisma.$connect();
 
         await deleteDatabase(prisma);
     });
+
+    afterAll(async () => {
+        await deleteDatabase(prisma);
+        await server.close();
+        await prisma.$disconnect();
+    })
 
     describe("GET /players", () => {
         it("should return an empty list", async () => {
