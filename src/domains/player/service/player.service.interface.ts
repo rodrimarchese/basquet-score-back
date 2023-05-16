@@ -7,6 +7,8 @@ export abstract class IPlayerService {
     abstract getLatestPlayer(options:
                                  { limit?: number; before?: string; after?: string }): Promise<PlayerDto[]>;
 
+    abstract defineTeam(playerId: string, teamId: string) : Promise<PlayerDto>
+
     abstract getPlayerGameStats(id: string, game_id: string): Promise<PlayerGameStatsDto>
 }
 

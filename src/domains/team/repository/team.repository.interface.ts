@@ -8,4 +8,6 @@ export abstract class ITeamRepository {
     abstract getAllByDatePaginated(options?: CursorPagination): Promise<TeamDto[]>;
 
     abstract getPlayers(team_id: string): Promise<PlayerDto[]>
+
+    abstract checkIfExists(teamId: string): Promise<boolean>
 }

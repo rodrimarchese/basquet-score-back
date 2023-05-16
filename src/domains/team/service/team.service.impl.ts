@@ -19,4 +19,8 @@ export class TeamService implements ITeamService {
     getPlayers(team_id: string): Promise<PlayerDto[]> {
         return this.teamRepository.getPlayers(team_id);
     }
+
+    isValidTeam(team_id: string): Promise<boolean> {
+        return this.teamRepository.checkIfExists(team_id)
+    }
 }

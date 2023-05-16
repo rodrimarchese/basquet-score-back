@@ -19,5 +19,5 @@ const playerService: IPlayerService = new PlayerService(
   new PlayerRepository(db)
 );
 
-router.use("/player", makePlayerRouter(playerService));
+router.use("/player", makePlayerRouter(playerService,teamService));
 router.use("/game",gameRouter)

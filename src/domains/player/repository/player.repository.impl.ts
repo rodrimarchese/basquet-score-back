@@ -47,4 +47,11 @@ export class PlayerRepository implements IPlayerRepository {
             points: sumOfPoints
         })
     }
+
+   async defineTeam(teamId: string, playerId: string): Promise<PlayerDto> {
+        return await this.db.player.update({
+            where: { id: playerId },
+            data: { teamId: teamId },
+        })
+    }
 }

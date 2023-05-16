@@ -11,5 +11,7 @@ export abstract class ITeamService {
     }): Promise<TeamDto[]>;
 
     abstract getPlayers(team_id: string): Promise<PlayerDto[]>
+
+    abstract isValidTeam(team_id: string): Promise<boolean>
 }
 

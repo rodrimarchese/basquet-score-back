@@ -25,6 +25,16 @@ export class TeamRepository implements ITeamRepository {
         }).then(team => new TeamDto(team));
     }
 
+    async checkIfExists(teamId: string): Promise<boolean> {
+        const team = await this.db.team.findUnique({
+            where: {
+                id: teamId,
+            }
+        })
+        return !!team;
+    }
+
+
     async getAllByDatePaginated(options: CursorPagination): Promise<TeamDto[]> {
         const teams = await this.db.team.findMany({
             ...paginatedResponse(options)
@@ -35,7 +45,7 @@ export class TeamRepository implements ITeamRepository {
     getPlayers(team_id: string): Promise<PlayerDto[]> {
         return this.db.player.findMany({
             where: {
-                teamId: team_id
+                id: team_id
             }
         }).then(players => players.map(player => new PlayerDto(player)));
     }

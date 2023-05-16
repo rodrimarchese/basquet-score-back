@@ -17,4 +17,8 @@ export class PlayerService implements IPlayerService {
     getPlayerGameStats(id: string, game_id: string): Promise<PlayerGameStatsDto> {
         return this.PlayerRepository.getPlayerGameStats(id, game_id);
     }
+
+  defineTeam(playerId: string, teamId: string): Promise<PlayerDto> {
+    return this.PlayerRepository.defineTeam(teamId, playerId)
+  }
 }

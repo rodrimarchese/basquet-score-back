@@ -6,8 +6,10 @@ import { CreatePlayerDto } from "../dto";
 import { IPlayerService } from "../service";
 import app from "express";
 import {getPlayers, playerResponse} from "@externalServices/external-api/externalApi";
+import {ITeamService} from "@domains/team/service";
+import {PatchPlayerDto} from "@domains/player/dto/path-player.dto";
 
-export const makePlayerRouter = (service: IPlayerService): Router => {
+export const makePlayerRouter = (service: IPlayerService, teamService: ITeamService): Router => {
   const playerRouter = app.Router();
 
   playerRouter.get("/", async (req: Request, res: Response) => {
@@ -44,6 +46,18 @@ export const makePlayerRouter = (service: IPlayerService): Router => {
     const page = req.query.page || 1;
     const playerResponse : playerResponse = await getPlayers(contains.toString(), parseInt(page.toString()))
     return res.status(HttpStatus.OK).json(playerResponse);
+  })
+
+  playerRouter.put( "/add_team",
+      BodyValidation(PatchPlayerDto), async (req: Request, res: Response) => {
+    const { playerId, teamId } = req.body;
+    const correctTeam= await teamService.isValidTeam(teamId)
+    if(correctTeam){
+      const player = await service.defineTeam(playerId, teamId)
+      return res.status(HttpStatus.OK).json(player);
+    }else{
+      return res.status(HttpStatus.BAD_REQUEST).json(" No team whit that id ");
+    }
   })
 
   return playerRouter;
