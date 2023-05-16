@@ -1,3 +1,3 @@
-export const externalApiUrlPlayers = "http://basquet-score-back-external-api-1:3010/players"
+export const externalApiUrlPlayers = "http://external-api:3010/players"
 
-export const externalApiUrlTeams = "http://localhost:3010/teams"
+export const externalApiUrlTeams = "http://external-api:3010/teams"

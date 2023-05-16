@@ -1,12 +1,11 @@
 import {Request, Response, Router} from 'express';
 import HttpStatus from 'http-status';
-import {db, BodyValidation} from '@utils'
-import {TeamDto, CreateTeamDto} from '../dto';
-import {TeamRepository} from '../repository'
+import {BodyValidation} from '@utils'
+import {CreateTeamDto} from '../dto';
 import {ITeamService, TeamService} from '../service';
 import "express-async-errors";
 import app from "express";
-import {getTeams2, teamResponse} from "@externalServices/external-api/externalApi";
+import {getTeams, teamResponse} from "@externalServices/external-api/externalApi";
 
 export const makeTeamRouter = (service: ITeamService): Router => {
     const teamRouter = app.Router()
@@ -36,7 +35,7 @@ export const makeTeamRouter = (service: ITeamService): Router => {
     teamRouter.get('/team_names', async (req: Request, res: Response) => {
         const contains = req.query.contains || "";
         const page = req.query.page || 1;
-        const teamResponse : teamResponse = await getTeams2(contains.toString(), parseInt(page.toString()))
+        const teamResponse : teamResponse = await getTeams(contains.toString(), parseInt(page.toString()))
         return res.status(HttpStatus.OK).json(teamResponse);
     });
 
