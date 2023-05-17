@@ -40,6 +40,13 @@ describe("PlayerService", () => {
     createdAt: new Date(),
   };
 
+  const playerGameStats = {
+    player_id: "1",
+    game_id: "2",
+    fouls: 1,
+    points: 3,
+  }
+
   const player2: PlayerDto = {
     id: "2",
     name: "name2",
@@ -49,7 +56,6 @@ describe("PlayerService", () => {
     createdAt: new Date(),
   };
 
-  //TODO: getPlayerGameStats
   const playerService = new PlayerService(PlayerRepositoryMock);
 
   test("create() should return a TeamDto object", async () => {
@@ -101,6 +107,17 @@ describe("PlayerService", () => {
     expect(playerDto.team!!.id).toEqual("2");
     expect(playerDto.createdAt).toBeDefined();
 
+  });
+
+  test("getPlayerGameStats() should return one object", async () => {
+    jest
+        .spyOn(playerService, "getPlayerGameStats")
+        .mockImplementation(() => Promise.resolve(playerGameStats));
+    const playerGameStatsResponse = await playerService.getPlayerGameStats("1", "2")
+    expect(playerGameStatsResponse.game_id).toBeDefined();
+    expect(playerGameStatsResponse.player_id).toBeDefined();
+    expect(playerGameStatsResponse.fouls).toBeDefined();
+    expect(playerGameStatsResponse.points).toBeDefined();
   });
 
 });
