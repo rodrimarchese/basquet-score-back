@@ -6,7 +6,8 @@ export class PlayerDto {
   surname: string;
   position: string;
   shirtNum: number;
-  team?: TeamDto;
+  teamId: string | null;
+  team?: TeamDto
   createdAt: Date;
 
   constructor(player: PlayerDto) {
@@ -15,7 +16,8 @@ export class PlayerDto {
     this.surname = player.surname;
     this.position = player.position;
     this.shirtNum = player.shirtNum;
-    this.team = player.team;
+    this.teamId = player.teamId;
+    this.team= player.team
     this.createdAt = player.createdAt;
   }
 }

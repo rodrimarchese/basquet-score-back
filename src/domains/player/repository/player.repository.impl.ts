@@ -15,6 +15,7 @@ export class PlayerRepository implements IPlayerRepository {
             .create({
                 data,
             })
+            // @ts-ignore
             .then((player) => new PlayerDto(player));
     }
 
@@ -60,7 +61,7 @@ export class PlayerRepository implements IPlayerRepository {
     }
 
    async defineTeam(teamId: string, playerId: string): Promise<PlayerDto> {
-        return await this.db.player.update({
+       return await this.db.player.update({
             where: { id: playerId },
             data: { teamId: teamId },
         })
