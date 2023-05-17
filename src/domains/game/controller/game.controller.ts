@@ -30,7 +30,7 @@ gameRouter.get('/active', async (req: Request, res: Response) => {
     console.log(page)
 
     const games = await service.getActiveGames({limit: Number(limit ?? 10), page: Number(page ?? 0)});
-    const gameCount = await service.getGameCount();
+    const gameCount = await service.getActiveGameCount();
 
 
     return res.status(HttpStatus.OK).json({
@@ -45,7 +45,7 @@ gameRouter.get('/ended', async (req: Request, res: Response) => {
     console.log(page)
 
     const games = await service.getEndedGames({limit: Number(limit ?? 10), page: Number(page ?? 0)});
-    const gameCount = await service.getGameCount();
+    const gameCount = await service.getEndedGameCount();
 
 
     return res.status(HttpStatus.OK).json({

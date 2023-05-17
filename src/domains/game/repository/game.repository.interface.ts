@@ -21,8 +21,11 @@ export abstract class IGameRepository {
 
 
     abstract getGameCount() : Promise<number>
+    abstract getActiveGameCount() : Promise<number>
+    abstract getEndedGameCount() : Promise<number>
 
     abstract getActiveGames(options: OffsetPagination): Promise<GameDto[]>
     abstract getEndedGames(options: OffsetPagination): Promise<GameDto[]>
+
 }
 
