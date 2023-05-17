@@ -47,7 +47,6 @@ export class GameService implements IGameService {
     getGameLineup(game_id: string,team_id: string): Promise<PlayerDto[]> {
         return this.gameRepository.getGameLineup(game_id,team_id);
     }
-
     getGameAllInfo(game_id: string) : Promise<GameAllInfoDto> {
         return this.gameRepository.getAllInfo(game_id);
     }
