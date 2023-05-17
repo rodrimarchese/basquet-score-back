@@ -64,4 +64,13 @@ export class GameService implements IGameService {
         return this.gameRepository.getEndedGames(options);
     }
 
+    getActiveGameCount(): Promise<number> {
+        return this.gameRepository.getActiveGameCount();
+    }
+
+    getEndedGameCount(): Promise<number> {
+        return this.gameRepository.getEndedGameCount();
+
+    }
+
 }

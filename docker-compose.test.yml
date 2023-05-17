@@ -5,12 +5,11 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=basket_db
+      - POSTGRES_DB=test_basket_db
     ports:
       - "5432:5432"
     volumes:
       - database:/var/lib/postgresql/data
-
   app:
     build:
       context: .
@@ -19,16 +18,15 @@ services:
       - .:/app
       - /app/node_modules
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       - database
       - external-api
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@database:5432/basket_db
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/test_basket_db
 
   external-api:
     image: nachoferra/external-api-aseca-app:latest
-
 
 volumes:
   database:

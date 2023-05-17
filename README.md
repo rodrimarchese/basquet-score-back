@@ -8,3 +8,13 @@
   docker compose up
   ```
 - You're ready to go!
+
+## Load testing
+
+- Run `docker-compose -f docker-compose.test.yml up`
+- Install [Locust](https://docs.locust.io/en/stable/installation.html)
+- Once the app is running, execute `yarn load-test`
+- Open a browser and go to `http://localhost:8089`
+- Enter the desired Number of users (peak concurrency) and Spawn rate (users started/second)
+- In the "Host" field write `http://localhost:8081`
+- Click the "Start swarming" button
