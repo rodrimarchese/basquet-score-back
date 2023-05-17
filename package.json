@@ -13,7 +13,8 @@
     "db:make-migrations": "prisma migrate dev",
     "db:generate": "prisma generate",
     "migrate:postgres": "dotenv -e .env.test -- npx prisma migrate deploy",
-    "test": "jest --forceExit --detectOpenHandles"
+    "test": "jest --forceExit --detectOpenHandles",
+    "load-test": "locust -f test/load/locustfile.py"
   },
   "dependencies": {
     "@prisma/client": "4.13.0",
