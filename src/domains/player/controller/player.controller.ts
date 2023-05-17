@@ -34,6 +34,19 @@ export const makePlayerRouter = (service: IPlayerService, teamService: ITeamServ
     }
   );
 
+
+    playerRouter.post(
+        "/create_many",
+        async (req: Request, res: Response) => {
+            const players: CreatePlayerDto[] = req.body;
+            const player = await players.forEach(async (player) => {
+                await service.create(player);
+            })
+            return res.status(HttpStatus.CREATED).json(player);
+
+        }
+    );
+
   playerRouter.get("/:id/game_stats/:game_id", async (req: Request, res: Response) => {
     const { id, game_id } = req.params;
     const player = await service.getPlayerGameStats(id, game_id);
@@ -59,6 +72,8 @@ export const makePlayerRouter = (service: IPlayerService, teamService: ITeamServ
       return res.status(HttpStatus.BAD_REQUEST).json(" No team whit that id ");
     }
   })
+
+
 
   return playerRouter;
 };
