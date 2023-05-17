@@ -24,11 +24,9 @@ export const makeTeamRouter = (service: ITeamService): Router => {
         return res.status(HttpStatus.CREATED).json(team);
     });
 
-    teamRouter.get('players/:team_id', async (req: Request, res: Response) => {
-        const {team_id} = req.params as Record<string, string>;
-
+    teamRouter.get('/players/:team_id', async (req: Request, res: Response) => {
+        const {team_id} = req.params as Record<string, string>
         const players = await service.getPlayers(team_id);
-
         return res.status(HttpStatus.OK).json(players);
     });
 

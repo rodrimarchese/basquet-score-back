@@ -69,6 +69,20 @@ describe("Team Controller", () => {
             expect(response.status).toBe(500);
         });
     });
+
+    describe("GET /team/players/:team_id", () => {
+        it("should create a team and return the created team with status 201", async () => {
+            const team = await returnMockData(prisma)
+            const player = await returnPlayerMockData(prisma)
+            const response1 = await supertest(app).put("/player/add_team").send({
+                playerId: player.id,
+                teamId: team.id,
+            });
+            const response = await supertest(app).get("/team/players/" + team.id).send();
+            expect(response.status).toBe(200);
+            expect(response.body).toBeDefined()
+        });
+    });
 });
 
 async function deleteDatabase(database: PrismaClient) {
@@ -79,5 +93,24 @@ async function deleteDatabase(database: PrismaClient) {
 async function createMockData(database: PrismaClient) {
     await database.team.create({
         data: mockTeam1,
+    });
+}
+
+async function returnMockData(database: PrismaClient) {
+   return  await database.team.create({
+        data: mockTeam1,
+    });
+}
+
+const mockplayer1 = {
+    name: "name",
+    surname: "surname",
+    position: "wing",
+    shirtNum: 1,
+};
+
+async function returnPlayerMockData(database: PrismaClient) {
+    return await database.player.create({
+        data: mockplayer1,
     });
 }

@@ -4,13 +4,8 @@ import {app, server} from "../../src/server";
 import supertest from "supertest";
 import {PrismaClient} from "@prisma/client";
 import {TeamDto} from "../../src/domains/team/dto";
-import {isIPv4} from "net";
+import {afterEach} from "@jest/globals";
 
-const mockGame = {
-    awayTeamId: "b3131535-2b8e-4f34-9754-b7f4a754d2e3",
-    homeTeamId: "7bf4e03a-9b0a-4e3e-b7c9-3041eedaa2da",
-    date: new Date(),
-}
 describe("Game Controller", () => {
     const prisma = configureMockPrisma();
 
@@ -46,7 +41,7 @@ describe("Game Controller", () => {
         });
     });
 
-    describe("POST /teams", () => {
+    describe("POST /game", () => {
         it("should create a game and return the created team with status 201", async () => {
             const team1 = await mockTeam1(prisma)
             const team2 =await mockTeam2(prisma)
@@ -68,6 +63,57 @@ describe("Game Controller", () => {
             const response = await supertest(app).post("/game").send({});
             expect(response.status).toBe(500);
         });
+    });
+
+    describe("POST /end_game/gameId", () => {
+        it("should stop a game and return the  game with status 201", async () => {
+            const team1 = await mockTeam1(prisma)
+            const team2 =await mockTeam2(prisma)
+
+            const game = await supertest(app).post("/game").send({
+                awayTeamId: team1.id,
+                homeTeamId: team2.id,
+                date: new Date(),
+            });
+
+            const gameId = game.body.id
+
+            const response = await supertest(app).post("/game/end_game/" + gameId).send();
+
+            expect(response.status).toBe(200);
+            expect(response.body.homeTeamId).toEqual(team2.id);
+            expect(response.body.id).toBeDefined();
+            expect(response.body.date).toBeDefined();
+            expect(response.body.awayTeamId).toEqual(team1.id);
+        });
+
+    });
+
+    describe("POST /player_score", () => {
+        it("should stop a game and return the  game with status 201", async () => {
+            const game = await returnMockData(prisma)
+            const player = await mockPlayer(prisma, game.homeTeamId)
+            const response = await supertest(app).post("/game/player_score").send({
+                game_id: game.id,
+                player_id: player.id,
+                score: "2",
+            });
+            expect(response.status).toBe(200);
+        });
+    });
+
+    describe("POST /player_foul", () => {
+        it("should stop a game and return the  game with status 201", async () => {
+            const game = await returnMockData(prisma)
+            const player = await mockPlayer(prisma, game.homeTeamId)
+            const response = await supertest(app).post("/game/player_foul").send({
+                game_id: game.id,
+                player_id: player.id,
+                foul: "2",
+            });
+            expect(response.status).toBe(200);
+        });
+
     });
 
 });
@@ -92,11 +138,43 @@ async function createMockData(database: PrismaClient) {
     });
 }
 
+async function returnMockData(database: PrismaClient) {
+    const team1 =await database.team.create({
+        data: {name: "Team 1"},
+    });
+    const team2 =await database.team.create({
+        data: {name: "Team 2"},
+    });
+
+    return await database.game.create({
+        data: {
+            awayTeamId: team1.id,
+            homeTeamId: team2.id,
+            date: new Date(),
+        },
+    });
+}
+
+
 async function mockTeam1(database: PrismaClient): Promise<TeamDto> {
     return await database.team.create({
         data: {name: "Team 3"},
     });
 }
+
+
+async function mockPlayer(database: PrismaClient, teamId: string): Promise<TeamDto> {
+    return await database.player.create({
+        data: {
+            name: "name",
+            surname: "surname",
+            position: "wing",
+            shirtNum: 1,
+            teamId: teamId,
+        },
+    });
+}
+
 
 async function mockTeam2(database: PrismaClient): Promise<TeamDto> {
     return await database.team.create({

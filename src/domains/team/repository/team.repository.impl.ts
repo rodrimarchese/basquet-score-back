@@ -45,7 +45,7 @@ export class TeamRepository implements ITeamRepository {
     getPlayers(team_id: string): Promise<PlayerDto[]> {
         return this.db.player.findMany({
             where: {
-                id: team_id
+                teamId: team_id
             }
         }).then(players => players.map(player => new PlayerDto(player)));
     }

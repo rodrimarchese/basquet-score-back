@@ -10,17 +10,20 @@ const mockplayer1 = {
     position: "wing",
     shirtNum: 1,
 };
-
+//TODO: /:id/game_stats/:game_id
 describe("Player Controller", () => {
     let prisma: PrismaClient;
 
     beforeAll(async () => {
         prisma = configureMockPrisma();
-
         await prisma.$connect();
-
         await deleteDatabase(prisma);
     });
+
+    beforeEach(async () => {
+        await deleteDatabase(prisma);
+    })
+
 
     afterAll(async () => {
         await deleteDatabase(prisma);
@@ -66,6 +69,30 @@ describe("Player Controller", () => {
             expect(response.status).toBe(500);
         });
     });
+
+    describe("PUT /players", () => {
+        it("should create a player and return the created player with status 201", async () => {
+            const player = await returnMockData(prisma)
+            const team = await returnTeamMockData(prisma)
+            const response = await supertest(app).put("/player/add_team").send({
+                playerId: player.id,
+                teamId: team.id,
+            });
+
+            expect(response.status).toBe(200);
+            expect(response.body.name).toEqual(mockplayer1.name);
+            expect(response.body.teamId).toEqual(team.id)
+            expect(response.body.id).toBeDefined();
+            expect(response.body.createdAt).toBeDefined();
+        });
+
+        it("should not add team with no team or player", async () => {
+            await createMockData(prisma);
+            const response = await supertest(app).put("/player/add_team").send({});
+
+            expect(response.status).toBe(500);
+        });
+    });
 });
 
 async function deleteDatabase(database: PrismaClient) {
@@ -78,5 +105,19 @@ async function deleteDatabase(database: PrismaClient) {
 async function createMockData(database: PrismaClient) {
     await database.player.create({
         data: mockplayer1,
+    });
+}
+
+async function returnMockData(database: PrismaClient) {
+    return await database.player.create({
+        data: mockplayer1,
+    });
+}
+
+const mockTeam1 = {name: "Team Z"};
+
+async function returnTeamMockData(database: PrismaClient) {
+    return await database.team.create({
+        data: mockTeam1,
     });
 }
