@@ -34,14 +34,14 @@ describe("Game Controller", () => {
             const response = await supertest(app).get("/game");
 
             expect(response.status).toBe(200);
-            expect(response.body).toEqual([]);
+            expect(response.body).toEqual({"count": 0, "games": []});
         });
         it("should return a list of teams", async () => {
             await createMockData(prisma)
             const response = await supertest(app).get("/game");
 
             expect(response.status).toBe(200);
-            expect(response.body).toHaveLength(1);
+            expect(response.body.games).toHaveLength(1);
         });
     });
 

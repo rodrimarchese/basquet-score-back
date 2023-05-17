@@ -19,8 +19,5 @@ export class CreatePlayerDto {
   @IsNotEmpty()
   shirtNum!: number;
 
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(240)
   teamId?: string;
 }

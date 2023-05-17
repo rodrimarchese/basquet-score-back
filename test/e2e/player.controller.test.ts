@@ -53,7 +53,7 @@ describe("Player Controller", () => {
                 name: "name",
                 surname: "surname",
                 position: "wing",
-                shirtNum: 1,
+                shirtNum: 1
             });
 
             expect(response.status).toBe(201);

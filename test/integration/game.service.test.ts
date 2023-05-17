@@ -29,6 +29,7 @@ describe("GameService", () => {
         surname: "surname",
         position: "wing",
         shirtNum: 1,
+        teamId: null,
         createdAt: new Date(),
     };
     const player2: PlayerDto = {
@@ -37,6 +38,7 @@ describe("GameService", () => {
         surname: "surname1",
         position: "wing",
         shirtNum: 4,
+        teamId: null,
         createdAt: new Date(),
     };
 

@@ -23,6 +23,7 @@ describe("PlayerService", () => {
     surname: "surname",
     position: "wing",
     shirtNum: 1,
+    teamId: null,
     createdAt: new Date(),
   };
 
@@ -37,6 +38,7 @@ describe("PlayerService", () => {
       name: "Team A",
       createdAt: new Date()
     },
+    teamId: "2",
     createdAt: new Date(),
   };
 
@@ -45,6 +47,8 @@ describe("PlayerService", () => {
     game_id: "2",
     fouls: 1,
     points: 3,
+    player_name: "name",
+    player_surname: "surname"
   }
 
   const player2: PlayerDto = {
@@ -53,6 +57,7 @@ describe("PlayerService", () => {
     surname: "surname2",
     position: "wing",
     shirtNum: 2,
+    teamId: null,
     createdAt: new Date(),
   };
 

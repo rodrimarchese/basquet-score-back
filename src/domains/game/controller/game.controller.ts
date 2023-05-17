@@ -12,7 +12,6 @@ const service: IGameService = new GameService(new GameRepository(db));
 gameRouter.get('/', async (req: Request, res: Response) => {
 
     const {limit,page} = req.query as Record<string, string>;
-    console.log(page)
 
     const games = await service.getLatestGame({limit: Number(limit ?? 10), page: Number(page ?? 0)});
     const gameCount = await service.getGameCount();
@@ -27,7 +26,6 @@ gameRouter.get('/', async (req: Request, res: Response) => {
 gameRouter.get('/active', async (req: Request, res: Response) => {
 
     const {limit,page} = req.query as Record<string, string>;
-    console.log(page)
 
     const games = await service.getActiveGames({limit: Number(limit ?? 10), page: Number(page ?? 0)});
     const gameCount = await service.getActiveGameCount();
