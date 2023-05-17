@@ -1,12 +1,12 @@
 import {GameDto, CreateGameDto} from '../dto';
-import {CursorPagination} from '@types';
+import {CursorPagination, OffsetPagination} from '@types';
 import {PlayerGameDataType} from "@prisma/client";
 import {PlayerDto} from "@domains/player/dto";
 
 export abstract class IGameRepository {
     abstract create(createGameDto: CreateGameDto): Promise<GameDto>;
 
-    abstract getAllByDatePaginated(options: CursorPagination): Promise<GameDto[]>;
+    abstract getAllByDatePaginated(options?: OffsetPagination): Promise<GameDto[]>;
 
     abstract endGame(gameId: string): Promise<GameDto>
 
@@ -16,5 +16,10 @@ export abstract class IGameRepository {
 
     abstract getGameLineup(game_id: string,team_id: string): Promise<PlayerDto[]>
     abstract addPoints(game_id: string, team_id: string, points: string): Promise<GameDto>
+
+    abstract getGameCount() : Promise<number>
+
+    abstract getActiveGames(options: OffsetPagination): Promise<GameDto[]>
+    abstract getEndedGames(options: OffsetPagination): Promise<GameDto[]>
 }
 

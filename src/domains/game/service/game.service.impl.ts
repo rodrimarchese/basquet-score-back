@@ -1,7 +1,7 @@
 import {GameDto, CreateGameDto} from '../dto';
 import {IGameService} from '../service';
 import {IGameRepository} from '../repository';
-import {CursorPagination} from "@types";
+import {CursorPagination, OffsetPagination} from "@types";
 import {PlayerGameDataType} from "@prisma/client";
 import {PlayerDto} from "@domains/player/dto";
 
@@ -13,7 +13,7 @@ export class GameService implements IGameService {
         return await this.gameRepository.create(createGameDto);
     }
 
-    getLatestGame(options: CursorPagination): Promise<GameDto[]> {
+    getLatestGame(options: OffsetPagination): Promise<GameDto[]> {
         return this.gameRepository.getAllByDatePaginated(options);
     }
 
@@ -45,6 +45,18 @@ export class GameService implements IGameService {
 
     getGameLineup(game_id: string,team_id: string): Promise<PlayerDto[]> {
         return this.gameRepository.getGameLineup(game_id,team_id);
+    }
+
+    getGameCount(): Promise<number> {
+        return this.gameRepository.getGameCount();
+    }
+
+    getActiveGames(options: OffsetPagination): Promise<GameDto[]> {
+        return this.gameRepository.getActiveGames(options);
+    }
+
+    getEndedGames(options: OffsetPagination): Promise<GameDto[]> {
+        return this.gameRepository.getEndedGames(options);
     }
 
 }

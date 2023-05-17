@@ -1,4 +1,4 @@
-import {CursorPagination} from "@types";
+import {CursorPagination, OffsetPagination} from "@types";
 
 interface PaginatedResponse {
     cursor: {
@@ -30,4 +30,16 @@ export const paginatedResponse = (options?: CursorPagination): PaginatedResponse
             ...order
         }
     } else return order
+}
+
+export const offsetPaginatedResponse = (options?: OffsetPagination) => {
+    if (options && (options.page || options.limit)) {
+        return {
+            skip: options.page ? (options.page) * (options.limit ?? 10) : 0,
+            take: options.limit ?? 10,
+        }
+    } else return {
+        skip: 0,
+        take: 10,
+    }
 }
