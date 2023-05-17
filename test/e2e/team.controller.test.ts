@@ -14,7 +14,7 @@ describe("Team Controller", () => {
         await prisma.$connect();
     });
 
-    afterEach(async () => {
+    beforeEach(async () => {
         await deleteDatabase(prisma);
     })
 
