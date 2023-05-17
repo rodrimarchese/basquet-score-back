@@ -69,11 +69,20 @@ export class GameRepository implements IGameRepository {
     }
 
     async getGame(game_id: string): Promise<GameDto | undefined> {
+
         return this.db.game.findUnique({
             where: {
                 id: game_id,
+            },
+            include: {
+                homeTeam: true,
+                awayTeam: true,
             }
-        }).then(game => game ? new GameDto(game) : undefined);
+        }).then(game => game ? new GameDto({
+            ...game,
+            homeTeamName: game.homeTeam.name,
+            awayTeamName: game.awayTeam.name,
+        }) : undefined);
     }
 
     async addPlayerGameData(gameId: string, playerId: string, data_type: PlayerGameDataType, data_value?: string): Promise<void> {
@@ -188,6 +197,24 @@ export class GameRepository implements IGameRepository {
 
     getGameCount(): Promise<number> {
         return this.db.game.count();
+    }
+
+    getActiveGameCount(): Promise<number> {
+        return this.db.game.count({
+            where: {
+                endedAt: null,
+            }
+        });
+    }
+
+    getEndedGameCount(): Promise<number> {
+        return this.db.game.count({
+            where: {
+                endedAt: {
+                    not: null,
+                },
+            }
+        });
     }
 
     async getActiveGames(options: OffsetPagination): Promise<GameDto[]> {
