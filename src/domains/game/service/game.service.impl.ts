@@ -4,6 +4,7 @@ import {IGameRepository} from '../repository';
 import {CursorPagination} from "@types";
 import {PlayerGameDataType} from "@prisma/client";
 import {PlayerDto} from "@domains/player/dto";
+import {GameAllInfoDto} from "@domains/game/dto/game-all-info.dto";
 
 export class GameService implements IGameService {
     constructor(private readonly gameRepository: IGameRepository) {
@@ -45,6 +46,10 @@ export class GameService implements IGameService {
 
     getGameLineup(game_id: string,team_id: string): Promise<PlayerDto[]> {
         return this.gameRepository.getGameLineup(game_id,team_id);
+    }
+
+    getGameAllInfo(game_id: string) : Promise<GameAllInfoDto> {
+        return this.gameRepository.getAllInfo(game_id);
     }
 
 }

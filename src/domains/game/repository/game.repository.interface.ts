@@ -2,6 +2,7 @@ import {GameDto, CreateGameDto} from '../dto';
 import {CursorPagination} from '@types';
 import {PlayerGameDataType} from "@prisma/client";
 import {PlayerDto} from "@domains/player/dto";
+import {GameAllInfoDto} from "@domains/game/dto/game-all-info.dto";
 
 export abstract class IGameRepository {
     abstract create(createGameDto: CreateGameDto): Promise<GameDto>;
@@ -16,5 +17,7 @@ export abstract class IGameRepository {
 
     abstract getGameLineup(game_id: string,team_id: string): Promise<PlayerDto[]>
     abstract addPoints(game_id: string, team_id: string, points: string): Promise<GameDto>
+    abstract getAllInfo(game_id: string): Promise<GameAllInfoDto>
+
 }
 

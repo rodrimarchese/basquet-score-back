@@ -27,7 +27,7 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@database:5432/basket_db
 
   external-api:
-    image: nachoferra/external-api-aseca-app:latest
+    image: external-api-aseca-app:latest
 
 
 volumes:

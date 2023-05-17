@@ -1,5 +1,6 @@
 import {GameDto, CreateGameDto} from '../dto';
 import {PlayerDto} from "@domains/player/dto";
+import {GameAllInfoDto} from "@domains/game/dto/game-all-info.dto";
 
 export abstract class IGameService {
     abstract create(createGameDto: CreateGameDto): Promise<GameDto>;
@@ -13,7 +14,7 @@ export abstract class IGameService {
     abstract endGame(gameId: string): Promise<GameDto>
 
     abstract addPlayerScore(game_id: string, player_id: string, score: string): Promise<void>
-
+    abstract getGameAllInfo(game_id: string) : Promise<GameAllInfoDto>
     abstract addPlayerFoul(game_id: string, player_id: string, foul: string): Promise<void>
 
     abstract getGame(game_id: string): Promise<GameDto | undefined>

@@ -5,6 +5,10 @@ import {CursorPagination} from '@types';
 import {NotFoundException} from "@utils";
 import {PlayerDto} from "@domains/player/dto";
 import {paginatedResponse} from "@utils/cursor_pagination";
+import {TeamRepository} from "@domains/team/repository";
+import {PlayerRepository} from "@domains/player/repository";
+import {GameAllInfoDto} from "@domains/game/dto/game-all-info.dto";
+import {PlayerGameStatsDto} from "@domains/player/dto/player-game-stats.dto";
 
 export class GameRepository implements IGameRepository {
     constructor(private readonly db: PrismaClient) {
@@ -152,5 +156,51 @@ export class GameRepository implements IGameRepository {
         }
     }
 
+    async getAllInfo(game_id: string): Promise<GameAllInfoDto> {
+        const game = await this.getGame(game_id)
+        if(!game){
+            throw new Error('Game not valid');
+        }
+
+        const homeTeam = await this.db.team.findUnique({
+            where: {
+                id: game.homeTeamId,
+            }
+        })
+
+        if(!homeTeam){
+            throw new Error('Team not valid');
+        }
+
+        const awayTeam = await this.db.team.findUnique({
+            where: {
+                id: game.awayTeamId,
+            }
+        })
+
+        if(!awayTeam){
+            throw new Error('Team not valid');
+        }
+        const teamRepository = new TeamRepository(this.db)
+        const playersOfHomeTeam = await teamRepository.getPlayers(homeTeam.id)
+        const playersOfAwayTeam = await  teamRepository.getPlayers(awayTeam.id)
+        const playersHomeTeamWithInfo = await this.getPlayersByIds(playersOfHomeTeam, game)
+        const playersAwayTeamWithInfo = await this.getPlayersByIds(playersOfAwayTeam, game)
+       return new GameAllInfoDto(
+           game,
+           homeTeam,
+           awayTeam,
+           playersHomeTeamWithInfo,
+           playersAwayTeamWithInfo
+       )
+    }
+
+    async getPlayersByIds(players: PlayerDto[], game: GameDto): Promise<PlayerGameStatsDto[]> {
+        const playerRepository = new PlayerRepository(this.db)
+        const playerPromise =players.map((player) => {
+            return playerRepository.getPlayerGameStats(player.id, game.id)
+        })
+        return await Promise.all(playerPromise)
+    }
 }
 
