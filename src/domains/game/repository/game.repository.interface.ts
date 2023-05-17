@@ -1,7 +1,8 @@
 import {GameDto, CreateGameDto} from '../dto';
-import {CursorPagination, OffsetPagination} from '@types';
+import {OffsetPagination} from '@types';
 import {PlayerGameDataType} from "@prisma/client";
 import {PlayerDto} from "@domains/player/dto";
+import {GameAllInfoDto} from "@domains/game/dto/game-all-info.dto";
 
 export abstract class IGameRepository {
     abstract create(createGameDto: CreateGameDto): Promise<GameDto>;
