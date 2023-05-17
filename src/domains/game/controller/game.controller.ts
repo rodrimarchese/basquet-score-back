@@ -11,13 +11,48 @@ const service: IGameService = new GameService(new GameRepository(db));
 
 gameRouter.get('/', async (req: Request, res: Response) => {
 
-    const {limit, before, after} = req.query as Record<string, string>;
+    const {limit,page} = req.query as Record<string, string>;
+    console.log(page)
 
-    const games = await service.getLatestGame({limit: Number(limit), before, after});
+    const games = await service.getLatestGame({limit: Number(limit ?? 10), page: Number(page ?? 0)});
+    const gameCount = await service.getGameCount();
 
-    return res.status(HttpStatus.OK).json(games);
+
+    return res.status(HttpStatus.OK).json({
+        games,
+        count: gameCount
+    });
 });
 
+gameRouter.get('/active', async (req: Request, res: Response) => {
+
+    const {limit,page} = req.query as Record<string, string>;
+    console.log(page)
+
+    const games = await service.getActiveGames({limit: Number(limit ?? 10), page: Number(page ?? 0)});
+    const gameCount = await service.getGameCount();
+
+
+    return res.status(HttpStatus.OK).json({
+        games,
+        count: gameCount
+    });
+});
+
+gameRouter.get('/ended', async (req: Request, res: Response) => {
+
+    const {limit,page} = req.query as Record<string, string>;
+    console.log(page)
+
+    const games = await service.getEndedGames({limit: Number(limit ?? 10), page: Number(page ?? 0)});
+    const gameCount = await service.getGameCount();
+
+
+    return res.status(HttpStatus.OK).json({
+        games,
+        count: gameCount
+    });
+});
 
 gameRouter.post('/',BodyValidation(CreateGameDto), async (req: Request, res: Response) => {
 
@@ -56,7 +91,6 @@ gameRouter.post('/player_foul', async (req: Request, res: Response) => {
 })
 
 gameRouter.post('/player_in', async (req: Request, res: Response) => {
-
     const {game_id, player_id} = req.body;
 
     await service.addPlayerInGame(game_id, player_id);

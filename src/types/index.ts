@@ -31,6 +31,6 @@ export type CursorPagination = {
  */
 export type OffsetPagination = {
     limit?: number;
-    skip?: number;
+    page?: number;
 };
 

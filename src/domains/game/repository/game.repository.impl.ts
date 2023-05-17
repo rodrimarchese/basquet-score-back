@@ -1,30 +1,60 @@
 import {IGameRepository} from '../repository';
 import {CreateGameDto, GameDto} from '../dto';
 import {PlayerGameDataType, PrismaClient} from '@prisma/client';
-import {CursorPagination} from '@types';
-import {NotFoundException} from "@utils";
+import {OffsetPagination} from '@types';
+import {NotFoundException, ValidationException} from "@utils";
 import {PlayerDto} from "@domains/player/dto";
 import {paginatedResponse} from "@utils/cursor_pagination";
 import {TeamRepository} from "@domains/team/repository";
 import {PlayerRepository} from "@domains/player/repository";
 import {GameAllInfoDto} from "@domains/game/dto/game-all-info.dto";
 import {PlayerGameStatsDto} from "@domains/player/dto/player-game-stats.dto";
+import {offsetPaginatedResponse} from "@utils/cursor_pagination";
 
 export class GameRepository implements IGameRepository {
     constructor(private readonly db: PrismaClient) {
     }
 
     async create(data: CreateGameDto): Promise<GameDto> {
+        if (data.homeTeamId === data.awayTeamId || !data.homeTeamId || !data.awayTeamId) {
+            throw new ValidationException([{game: 'Home team and away team cannot be the same'}]);
+        }
+        const game = await this.db.game.findFirst({
+            where: {
+                OR: [
+                    {
+                        homeTeamId: data.homeTeamId,
+                        awayTeamId: data.awayTeamId,
+                    },
+                    {
+                        homeTeamId: data.awayTeamId,
+                        awayTeamId: data.homeTeamId,
+                    }
+                ],
+                endedAt: null,
+            }
+        })
+        if (game) {
+            throw new ValidationException([{game: 'Game already exists'}]);
+        }
         return await this.db.game.create({
             data,
         }).then(game => new GameDto(game));
     }
 
-    async getAllByDatePaginated(options?: CursorPagination): Promise<GameDto[]> {
+    async getAllByDatePaginated(options?: OffsetPagination): Promise<GameDto[]> {
         const games = await this.db.game.findMany({
-            ...paginatedResponse(options)
+            ...offsetPaginatedResponse(options),
+            include: {
+                homeTeam: true,
+                awayTeam: true,
+            }
         });
-        return games.map(game => new GameDto(game));
+        return games.map(game => new GameDto({
+            ...game,
+            homeTeamName: game.homeTeam.name,
+            awayTeamName: game.awayTeam.name,
+        }))
     }
 
     endGame(gameId: string): Promise<GameDto> {
@@ -115,7 +145,7 @@ export class GameRepository implements IGameRepository {
         if (!player) {
             throw new NotFoundException('Player not found');
         }
-        if (!player.teamId){
+        if (!player.teamId) {
             throw new NotFoundException('Player team not found');
         }
         const game = await this.db.game.findUnique({
@@ -129,7 +159,7 @@ export class GameRepository implements IGameRepository {
         if (game.endedAt !== null) {
             throw new Error('Game already ended');
         }
-        if (game.awayTeamId === player.teamId){
+        if (game.awayTeamId === player.teamId) {
             return this.db.game.update({
                 where: {
                     id: game_id,
@@ -140,7 +170,7 @@ export class GameRepository implements IGameRepository {
                     }
                 }
             })
-        } else if (game.homeTeamId === player.teamId){
+        } else if (game.homeTeamId === player.teamId) {
             return this.db.game.update({
                 where: {
                     id: game_id,
@@ -154,6 +184,48 @@ export class GameRepository implements IGameRepository {
         } else {
             throw new Error('Player not in game');
         }
+    }
+
+    getGameCount(): Promise<number> {
+        return this.db.game.count();
+    }
+
+    async getActiveGames(options: OffsetPagination): Promise<GameDto[]> {
+        const games = await this.db.game.findMany({
+            ...offsetPaginatedResponse(options),
+            where: {
+                endedAt: null,
+            },
+            include: {
+                homeTeam: true,
+                awayTeam: true,
+            }
+        });
+        return games.map(game => new GameDto({
+            ...game,
+            homeTeamName: game.homeTeam.name,
+            awayTeamName: game.awayTeam.name,
+        }))
+    }
+
+    async getEndedGames(options: OffsetPagination): Promise<GameDto[]> {
+        const games = await this.db.game.findMany({
+            ...offsetPaginatedResponse(options),
+            where: {
+                endedAt: {
+                    not: null,
+                },
+            },
+            include: {
+                homeTeam: true,
+                awayTeam: true,
+            }
+        });
+        return games.map(game => new GameDto({
+            ...game,
+            homeTeamName: game.homeTeam.name,
+            awayTeamName: game.awayTeam.name,
+        }))
     }
 
     async getAllInfo(game_id: string): Promise<GameAllInfoDto> {

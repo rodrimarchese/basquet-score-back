@@ -7,8 +7,8 @@ export abstract class IGameService {
 
     abstract getLatestGame(options: {
         limit?: number;
-        before?: string;
-        after?: string
+        page?: number;
+        page_size?: number;
     }): Promise<GameDto[]>;
 
     abstract endGame(gameId: string): Promise<GameDto>
@@ -23,4 +23,9 @@ export abstract class IGameService {
     abstract addPlayerInGame(game_id: string, player_in: string): Promise<void>
 
     abstract getGameLineup(game_id: string,team_id: string): Promise<PlayerDto[]>
+
+    abstract getGameCount(): Promise<number>
+
+    abstract getEndedGames(options: { limit: number; page: number }): Promise<GameDto[]>
+    abstract getActiveGames(options: { limit: number; page: number }): Promise<GameDto[]>
 }
