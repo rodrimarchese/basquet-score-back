@@ -49,11 +49,13 @@ describe("Player Controller", () => {
 
     describe("POST /players", () => {
         it("should create a player and return the created player with status 201", async () => {
+            const team = await returnTeamMockData(prisma)
             const response = await supertest(app).post("/player").send({
                 name: "name",
                 surname: "surname",
                 position: "wing",
-                shirtNum: 1
+                shirtNum: 1,
+                teamId: team.id
             });
 
             expect(response.status).toBe(201);

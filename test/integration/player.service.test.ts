@@ -15,6 +15,7 @@ describe("PlayerService", () => {
     surname: "surname",
     position: "wing",
     shirtNum: 1,
+    teamId: "1"
   };
 
   const player: PlayerDto = {
