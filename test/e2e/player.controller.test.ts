@@ -97,8 +97,8 @@ describe("Player Controller", () => {
 
 async function deleteDatabase(database: PrismaClient) {
     // delete all data from the database
-    await database.player.deleteMany({});
-    await database.player.deleteMany({});
+    await database.game.deleteMany({});
+    await database.team.deleteMany({});
     await database.player.deleteMany({});
 }
 

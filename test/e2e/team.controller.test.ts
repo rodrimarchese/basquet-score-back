@@ -86,9 +86,9 @@ describe("Team Controller", () => {
 });
 
 async function deleteDatabase(database: PrismaClient) {
-    // delete all data from the database
+    await database.game.deleteMany({});
     await database.team.deleteMany({});
-}
+    await database.player.deleteMany({});}
 
 async function createMockData(database: PrismaClient) {
     await database.team.create({

@@ -11,11 +11,15 @@ describe("Game Controller", () => {
 
     beforeAll(async () => {
         await prisma.$connect();
+        await deleteDatabase(prisma);
+
     });
 
     beforeEach(async () => {
         await deleteDatabase(prisma);
     })
+
+
 
 
     afterAll(async () => {
@@ -116,10 +120,74 @@ describe("Game Controller", () => {
 
     });
 
+    describe("POST /player_in", () => {
+        it("should stop a game and return the  game with status 201", async () => {
+            const game = await returnMockData(prisma)
+            const player = await mockPlayer(prisma, game.homeTeamId)
+            const response = await supertest(app).post("/game/player_in").send({
+                game_id: game.id,
+                player_id: player.id,
+            });
+            expect(response.status).toBe(200);
+        });
+
+    });
+
+    describe("POST /player_change", () => {
+        it("should stop a game and return the  game with status 201", async () => {
+            const game = await returnMockData(prisma)
+            const player = await mockPlayer(prisma, game.homeTeamId)
+            const player2 = await mockPlayer2(prisma, game.homeTeamId)
+            const response = await supertest(app).post("/game/player_change").send({
+                game_id: game.id,
+                player_in: player.id,
+                player_out: player2.id,
+            });
+            expect(response.status).toBe(200);
+        });
+    });
+
+    describe("GET /game/:gameId", () => {
+        it("should return an error ", async () => {
+            const response = await supertest(app).get("/game/1"  );
+            expect(response.status).toBe(500);
+        });
+        it("should return a a game", async () => {
+            const game = await returnMockData(prisma)
+            const response = await supertest(app).get("/game/" + game.id);
+            expect(response.status).toBe(200);
+            expect(response.body.id).toEqual(game.id);
+        });
+    });
+
+    describe("GET /lineup/:game_id/:team_id", () => {
+        it("should return an error ", async () => {
+            const response = await supertest(app).get("/lineup/1/2"  );
+            expect(response.status).toBe(404);
+        });
+        it("should return a a game", async () => {
+            const game = await returnMockData(prisma)
+            const player = await mockPlayer(prisma, game.homeTeamId)
+            await supertest(app).post("/game/player_in").send({
+                game_id: game.id,
+                player_id: player.id,
+            });
+            const response = await supertest(app).get("/game/lineup/" + game.id  + "/" + game.homeTeamId);
+            expect(response.status).toBe(200);
+            expect(response.body[0].id).toEqual(player.id);
+            expect(response.body[0].name).toEqual(player.name);
+
+        });
+    });
+
 });
 
 async function deleteDatabase(database: PrismaClient) {
     await database.game.deleteMany({});
+    await database.team.deleteMany({});
+    await database.player.deleteMany({});
+
+
 }
 
 async function createMockData(database: PrismaClient) {
@@ -140,10 +208,10 @@ async function createMockData(database: PrismaClient) {
 
 async function returnMockData(database: PrismaClient) {
     const team1 =await database.team.create({
-        data: {name: "Team 1"},
+        data: {name: "Team 3" },
     });
     const team2 =await database.team.create({
-        data: {name: "Team 2"},
+        data: {name: "Team 4"},
     });
 
     return await database.game.create({
@@ -175,6 +243,17 @@ async function mockPlayer(database: PrismaClient, teamId: string): Promise<TeamD
     });
 }
 
+async function mockPlayer2(database: PrismaClient, teamId: string): Promise<TeamDto> {
+    return await database.player.create({
+        data: {
+            name: "name1",
+            surname: "surname1",
+            position: "wing",
+            shirtNum: 2,
+            teamId: teamId,
+        },
+    });
+}
 
 async function mockTeam2(database: PrismaClient): Promise<TeamDto> {
     return await database.team.create({
