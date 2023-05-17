@@ -56,7 +56,6 @@ gameRouter.post('/player_foul', async (req: Request, res: Response) => {
 })
 
 gameRouter.post('/player_in', async (req: Request, res: Response) => {
-
     const {game_id, player_id} = req.body;
 
     await service.addPlayerInGame(game_id, player_id);

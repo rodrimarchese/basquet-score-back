@@ -2,7 +2,7 @@ import {IGameRepository} from '../repository';
 import {CreateGameDto, GameDto} from '../dto';
 import {PlayerGameDataType, PrismaClient} from '@prisma/client';
 import {CursorPagination} from '@types';
-import {NotFoundException} from "@utils";
+import {NotFoundException, ValidationException} from "@utils";
 import {PlayerDto} from "@domains/player/dto";
 import {paginatedResponse} from "@utils/cursor_pagination";
 
@@ -11,6 +11,27 @@ export class GameRepository implements IGameRepository {
     }
 
     async create(data: CreateGameDto): Promise<GameDto> {
+        if (data.homeTeamId === data.awayTeamId || !data.homeTeamId || !data.awayTeamId) {
+            throw new ValidationException([{game: 'Home team and away team cannot be the same'}]);
+        }
+        const game = await this.db.game.findFirst({
+            where: {
+                OR: [
+                    {
+                        homeTeamId: data.homeTeamId,
+                        awayTeamId: data.awayTeamId,
+                    },
+                    {
+                        homeTeamId: data.awayTeamId,
+                        awayTeamId: data.homeTeamId,
+                    }
+                ],
+                endedAt: null,
+            }
+        })
+        if (game) {
+            throw new ValidationException([{game: 'Game already exists'}]);
+        }
         return await this.db.game.create({
             data,
         }).then(game => new GameDto(game));
