@@ -1,5 +1,5 @@
 # Install dependencies
-FROM node:18-slim AS deps
+FROM node:18-alpine AS deps
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # Build source code
-FROM node:18-slim AS builder
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 VOLUME /app
@@ -21,7 +21,7 @@ RUN yarn db:generate
 RUN yarn build
 
 # Production runtime
-FROM node:18-slim AS runner
+FROM node:18-alpine AS runner
 
 WORKDIR /app
 
@@ -33,7 +33,7 @@ EXPOSE 8080
 CMD yarn prod
 
 # Development runtime
-FROM node:18-slim AS dev
+FROM node:18-alpine AS dev
 
 WORKDIR /app
 

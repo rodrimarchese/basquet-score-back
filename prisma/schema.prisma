@@ -24,7 +24,7 @@ model Team {
 }
 
 model Player {
-  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid // Primary Key
+  id       String  @id @default(cuid()) @db.Uuid // Primary Key
   name     String
   surname  String
   position String

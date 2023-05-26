@@ -79,6 +79,15 @@ gameRouter.post('/player_score', async (req: Request, res: Response) => {
     return res.status(HttpStatus.OK).json();
 })
 
+gameRouter.post('/many_player_score', async (req: Request, res: Response) => {
+
+    const data: {game_id: string, player_id: string, score: string}[] = req.body;
+    const fionalData = await data.forEach(async ({game_id, player_id, score}) => {
+        await service.addPlayerScore(game_id, player_id, score);
+    })
+    return res.status(HttpStatus.OK).json(fionalData);
+})
+
 gameRouter.post('/player_foul', async (req: Request, res: Response) => {
 
     const {game_id, player_id, foul} = req.body;
