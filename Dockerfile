@@ -26,7 +26,7 @@ FROM node:18-alpine AS runner
 WORKDIR /app
 
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/prisma ./prisma
+#COPY --from=builder /app/prisma ./prisma
 
 EXPOSE 8080
 
@@ -39,8 +39,8 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/package.json ./
-COPY nodemon.json ./nodemon.json
-COPY tsconfig.json ./tsconfig.json
+#COPY nodemon.json ./nodemon.json
+#COPY tsconfig.json ./tsconfig.json
 COPY . .
 
 CMD yarn dev

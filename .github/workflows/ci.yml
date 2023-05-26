@@ -24,8 +24,8 @@ jobs:
       - name: Run tests
         run: npm run test:int
 
-      - name: Run Docker Publish action
-        uses: Nachoferra1894/ingsis-actions@main
+      - name: Call Docker Image action
+        uses: Nachoferra1894/ingsis-actions/.github/workflows/docker-image.yml@main
         with:
           image-name: nachoferra/aseca
           image-version: 0.0.1
