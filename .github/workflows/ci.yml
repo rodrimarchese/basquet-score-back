@@ -29,8 +29,6 @@ jobs:
     with:
       image-name: nachoferra/aseca
       image-version: 1.0.1
-    secrets:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 
 #      - name: Login to Docker Hub
