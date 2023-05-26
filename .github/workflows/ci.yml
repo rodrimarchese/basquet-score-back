@@ -25,7 +25,7 @@ jobs:
         run: npm run test:int
 
   docker:
-    uses: Nachoferra1894/ingsis-actions/.github/workflows/buildAndPublishDockerImage.yml@main
+    uses: Nachoferra1894/ingsis-actions/.github/workflows/docker-image.yml@main
     with:
       image-name: nachoferra/aseca
       image-version: 1.0.1
