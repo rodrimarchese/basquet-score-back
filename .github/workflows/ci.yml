@@ -25,10 +25,10 @@ jobs:
         run: npm run test:int
   publish:
     runs-on: ubuntu-latest
-    uses: Nachoferra1894/ingsis-actions/.github/workflows/docker-image.yml@main
+    uses: Nachoferra1894/ingsis-actions@main
     with:
-      image-name: nachoferra/aseca
-      image-version: 0.0.1
+     workflow: ci.yml
+     arguments: '{"image-name": "nachoferra/aseca", "image-version": "0.0.1"}'
 
 
 #      - name: Login to Docker Hub
@@ -45,3 +45,4 @@ jobs:
 #        run: |
 #          docker build -t $DOCKERHUB_REPOSITORY .
 #          docker push $DOCKERHUB_REPOSITORY
+
