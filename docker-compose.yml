@@ -10,6 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - database:/var/lib/postgresql/data
+    mem_limit: 1g
 
   app:
     build:
@@ -25,9 +26,11 @@ services:
       - external-api
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@database:5432/basket_db
+    mem_limit: 512m
 
   external-api:
     image: nachoferra/external-api-aseca-app:latest
+    mem_limit: 256m
 
 
 volumes:
